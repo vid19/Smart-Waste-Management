@@ -20,14 +20,31 @@ SetAngle(90)
 moisture = 40
 GPIO.setup(moisture, GPIO.IN)
 
+#Ultrasonic sensor setup
+import RPi.GPIO as GPIO
+import time
+
+def distance(a,b):
+    GPIO.output(a, GPIO.HIGH)
+    time.sleep(0.000015)
+    GPIO.output(a, GPIO.LOW)
+    while not GPIO.input(b):
+        pass
+    t1 = time.time()
+    while GPIO.input(b):
+        pass
+    t2 = time.time()
+    
+    return (t2-t1)*340/2
+
 #IR Sensor setup
 ir_sensor = 38
 GPIO.setup(ir_sensor, GPIO.IN)
 time.sleep(2)
 try:
     while True:
-        a = random.randint(20,50)
-        b = random.randint(20,50)
+        a = round(distance(16,18),2) # a and b are dustbin levels of 2 bins
+        b = round(distance(24,26),2)
        if GPIO.input(ir_sensor):
             print("No waste placed")
         else:
